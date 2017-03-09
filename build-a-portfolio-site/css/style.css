@@ -1,0 +1,62 @@
+body {
+    font-family: 'Lato', sans-serif;
+    color: #2d3c49;
+}
+
+img {
+    max-width: 100%;
+}
+
+header {
+    margin: 20px 0 30px;
+    border-bottom: 4px solid #bababa;
+}
+
+a, a:hover {
+    color: #2d3c49;
+}
+
+.logo {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.logo img {
+    max-width: 100px;
+}
+
+.header-text {
+    color: #676858;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.header-text .head {
+    font-weight: 100;
+    font-size: 4em;
+    margin-bottom: 0;
+}
+
+.header-text .role {
+    margin-top: 0.5em;
+    font-weight: 300;
+}
+
+.featured-headline {
+    font-weight: 300;
+}
+
+.featured-item .headline {
+    font-weight: 300;
+}
+
+@media screen and (min-width: 768px) {
+    .logo {
+        margin-top: 20px;
+        text-align: left;
+    }
+
+    .header-text {
+        text-align: right;
+    }
+}
