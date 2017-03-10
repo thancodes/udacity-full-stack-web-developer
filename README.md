@@ -21,7 +21,7 @@ Or you could try out the app here:
 [Tawatchai Blog](http://tawatchair-blog.appspot.com/)
 
 ## Tournament Planner
-Clone this repo to your desktop, go to its `tournament-planner` directory
+Clone this repo to your desktop, go to its `tournament-planner` directory.
 
 ### Launch the Vagrant
 ```bash
