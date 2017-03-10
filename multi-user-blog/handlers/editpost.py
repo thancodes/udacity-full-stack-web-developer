@@ -9,11 +9,14 @@ class EditPostHandler(BlogHandler):
         post = db.get(key)
 
         if self.user and self.user.key().id() == post.user_id:
-            self.render('editpost.html', subject=post.subject, content=post.content, post_id=post_id)
+            self.render('editpost.html', subject=post.subject,
+                        content=post.content,
+                        post_id=post_id)
         elif not self.user:
             self.redirect('/')
         else:
-            self.write('You cannot edit this post becuase you are not the one who wrote this post.')
+            self.write('You cannot edit this post becuase '
+                       'you are not the one who wrote this post.')
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -37,6 +40,9 @@ class EditPostHandler(BlogHandler):
                 self.redirect('/' + post.key().id())
             else:
                 error = 'Subject and content, please'
-                self.render('newpost.html', subject=subject, content=content, error=error)
+                self.render('newpost.html', subject=subject,
+                            content=content,
+                            error=error)
         else:
-            self.write('You cannot edit this post becuase you are not the one who wrote this post.')
+            self.write('You cannot edit this post becuase '
+                       'you are not the one who wrote this post.')
