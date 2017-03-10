@@ -2,7 +2,7 @@
 DROP DATABASE IF EXISTS tournament;
 
 /* Create the database tournament */
-CREATE DATABASE tournament
+CREATE DATABASE tournament;
 
 /* Connect to the database tournament */
 \c tournament;
@@ -14,7 +14,7 @@ CREATE TABLE players  ( id SERIAL PRIMARY KEY,
 
 /* Create the matches table  */
 CREATE TABLE matches  ( id SERIAL PRIMARY KEY,
-                        winner_id INT,
-                        loser_id INT,
+                        winner_id INT REFERENCES players(id),
+                        loser_id INT REFERENCES players(id) ,
                         FOREIGN KEY (winner_id) REFERENCES players(id),
                         FOREIGN KEY (loser_id) REFERENCES players(id) );

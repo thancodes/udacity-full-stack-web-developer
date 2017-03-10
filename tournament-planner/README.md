@@ -1,5 +1,5 @@
 # Tournament Planner
-Clone this repo to your desktop, go to its `tournament-planner` directory
+Clone this repo to your desktop, go to its `tournament-planner/vagrant/tournament` directory
 
 ## Launch the Vagrant
 ```bash
