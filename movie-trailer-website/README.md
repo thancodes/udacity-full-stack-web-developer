@@ -1,8 +1,6 @@
-# Full Stack Web Developer Nanodegree
+# Movie Trailer Website
 
-## Movie Trailer Website
-
-### Using
+## Using
 Clone this repo to your desktop, go to its `movie-trailer-website` directory and run:
 ```bash
 python entertainment_center.py

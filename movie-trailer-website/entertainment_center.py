@@ -1,6 +1,9 @@
 import media
 import fresh_tomatoes
 
+"""
+Create new movie object to 3 variables is the_social_network, steve_jobs, benjamin_button
+"""
 the_social_network = media.Movie('The Social Network',
                                  'Harvard student Mark Zuckerberg creates the social networking site that would '
                                  'become known as Facebook, but is later sued by two brothers who claimed he stole '
@@ -20,5 +23,9 @@ benjamin_button = media.Movie('The Curious Case of Benjamin Button',
                               'https://upload.wikimedia.org/wikipedia/en/7/7c/The_Curious_Case_of_Benjamin_Button_%28film%29.png',
                               'https://www.youtube.com/watch?v=rAYtpZgelAM')
 
+"""
+Main subroutine for generate movie page
+Add 3 variables to movies array for generate
+"""
 movies = [the_social_network, steve_jobs, benjamin_button]
 fresh_tomatoes.open_movies_page(movies)
