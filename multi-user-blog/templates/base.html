@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tawatchai Blog</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+<div class="blog-masthead">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <nav class="blog-nav">
+                    <a class="blog-nav-item" href="/">Home</a>
+                </nav>
+            </div>
+            <div class="col-sm-6 text-right">
+                <nav class="blog-nav">
+                    {% if user %}
+                        <a class="blog-nav-item" href="/newpost">Write a New Story</a>
+                        |
+                        <a href="#" class="blog-nav-item">{{ user.name }}</a>
+                        (<a class="blog-nav-item" href="/logout">logout</a>)
+                    {% else %}
+                        <a class="blog-nav-item" href="/login">Login</a>
+                        <a class="blog-nav-item" href="/signup">Sign up</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="blog-header">
+        <h1 class="blog-title">Tawatchai Blog</h1>
+        <p class="lead blog-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+            {% if access_error %}
+                <div class="alert alert-danger">{{ access_error }}</div>
+            {% endif %}
+            {% block content %}
+            {% endblock %}
+        </div><!-- /.blog-main -->
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <div class="sidebar-module sidebar-module-inset">
+                <h4>About</h4>
+                <p>
+                    <strong>Tawatchai Rakpuen</strong><br>
+                    A hardcore programmer, founder of YAK Studio, full stack web developer, laravel developer, seo
+                    specialist, android developer, and love beautiful code.
+                </p>
+            </div>
+            <div class="sidebar-module">
+                <h4>Elsewhere</h4>
+                <ol class="list-unstyled">
+                    <li><a href="https://github.com/tawatchair">GitHub</a></li>
+                    <li><a href="https://www.facebook.com/tawatchairakpue">Facebook</a></li>
+                </ol>
+            </div>
+        </div><!-- /.blog-sidebar -->
+    </div>
+</div>
+</body>
+</html>

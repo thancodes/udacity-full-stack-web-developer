@@ -1,0 +1,16 @@
+<div class="blog-post">
+    <h2 class="blog-post-title">
+        <a href="/{{ p.key().id() }}">{{ p.subject }}</a>
+    </h2>
+    <p class="blog-post-meta">{{ p.created.strftime("%b %d, %Y") }} by <strong>{{ author }}</strong>
+        / Likes: {{ p.likes }}</p>
+    <div class="post-content">
+        {{ p._render_text | safe }}
+    </div>
+    <div class="text-right">
+        <a href="/{{ p.key().id() }}/like" class="btn btn-success btn-xs">
+            <i class="fa fa-thumbs-up"></i>&nbsp;&nbsp;Like
+        </a>
+    </div>
+</div>
+<hr>

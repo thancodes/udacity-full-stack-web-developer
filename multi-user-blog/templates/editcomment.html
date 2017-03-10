@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Edit Comment</div>
+        <div class="panel-body">
+            <form method="post">
+                <div class="form-group {% if error %} has-error {% endif %}">
+                    <textarea name="content" id="content" cols="30" rows="10" class="form-control" placeholder="Write a response...">{{ content }}</textarea>
+                    <div class="help-block">{{ error }}</div>
+                </div>
+                <a href="/{{ post_id }}" class="btn btn-default">
+                    <i class="fa fa-mail-reply"></i>&nbsp;&nbsp;Cancel
+                </a>
+                <button type="submit" class="btn btn-success pull-right">
+                    <i class="fa fa-paper-plane"></i>&nbsp;&nbsp;Save
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

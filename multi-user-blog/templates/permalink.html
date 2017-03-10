@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if user %}
+        {{ post.render(user.key().id()) | safe }}
+    {% else %}
+        {{ post.render(None) | safe }}
+    {% endif %}
+
+    <div class="text-right">
+        {% if user and user.key().id() == post.user_id %}
+            <a href="/{{ post.key().id() }}/delete/{{ post.user_id }}" class="btn btn-danger btn-sm">
+                <i class="fa fa-trash"></i>&nbsp;&nbsp;Move to Trash
+            </a>
+            <a href="/{{ post.key().id() }}/edit" class="btn btn-primary btn-sm">
+                <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Post
+            </a>
+        {% elif user %}
+            <a href="/{{ post.key().id() }}/unlike" class="btn btn-warning btn-sm">
+                <i class="fa fa-thumbs-down"></i>&nbsp;&nbsp;Unlike
+            </a>
+        {% endif %}
+
+        {% if user %}
+            <a href="/{{ post.key().id() }}/addcomment/{{ user.key().id() }}" class="btn btn-success btn-sm">
+                <i class="fa fa-comment"></i>&nbsp;&nbsp;Add Comment
+            </a>
+        {% endif %}
+    </div>
+
+    <br>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Comments</div>
+        <div class="panel-body">
+            {% for c in comments %}
+                <div class="well">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <i class="fa fa-user"></i>
+                                    {{ c.user_name }}
+                                </li>
+                                <li>
+                                    <small class="text-muted">{{ c.created.strftime("%b %d, %Y") }}</small>
+                                </li>
+                                {% if user and user.key().id() == c.user_id %}
+                                    <li>
+                                        <a href="/{{ post.key().id() }}/{{ c.user_id }}/editcomment/{{ c.key().id() }}" class="btn btn-primary btn-xs">
+                                            <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Comment
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/{{ post.key().id() }}/{{ c.user_id }}/deletecomment/{{ c.key().id() }}" class="btn btn-danger btn-xs">
+                                            <i class="fa fa-trash"></i>&nbsp;&nbsp;Move to Trash
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-xs-9">{{ c.content }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <i>{{ error }}</i>
+
+{% endblock %}

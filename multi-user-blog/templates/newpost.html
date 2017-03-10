@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Write a New Story</div>
+        <div class="panel-body">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endif %}
+            <form method="post">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea name="content" id="content" cols="30" rows="10" class="form-control" placeholder="Content"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary pull-right">Publish</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
