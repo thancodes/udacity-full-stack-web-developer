@@ -11,24 +11,24 @@ def connect(database_name="tournament"):
     return psycopg2.connect("dbname=" + database_name)
 
 
-def deleteMatches():
-    """Remove all the match records from the database."""
+def commitExecute(query):
     conn = connect()
     db_cursor = conn.cursor()
-    query = "DELETE FROM matches;"
     db_cursor.execute(query)
     conn.commit()
     conn.close()
+
+
+def deleteMatches():
+    """Remove all the match records from the database."""
+    query = "DELETE FROM matches;"
+    commitExecute(query)
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    db_cursor = conn.cursor()
     query = "DELETE FROM players;"
-    db_cursor.execute(query)
-    conn.commit()
-    conn.close()
+    commitExecute(query)
 
 
 def countPlayers():
@@ -54,12 +54,8 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
-    db_cursor = conn.cursor()
     query = "INSERT INTO players (name) VALUES(%s)"
-    db_cursor.execute(query, (name,))
-    conn.commit()
-    conn.close()
+    commitExecute(query)
 
 
 def playerStandings():
@@ -104,15 +100,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    conn = connect()
-    db_cursor = conn.cursor()
     query = """
     INSERT INTO matches (winner_id, loser_id)
     VALUES ({winner_id}, {loser_id})
     """.format(winner_id=winner, loser_id=loser)
-    db_cursor.execute(query)
-    conn.commit()
-    conn.close()
+    commitExecute(query)
 
 
 def swissPairings():
