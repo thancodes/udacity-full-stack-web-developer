@@ -371,7 +371,7 @@ def delete_course(course_id):
     if not user_allowed_to_edit(course):
         flash(
             'You are not authorized to edit this course, '
-            'but you can always create yours and then edit them if you want.',
+            'but you can always create yours and then delete them if you want.',
             'danger')
         return redirect(url_for('index'))
 
@@ -392,12 +392,18 @@ def delete_course(course_id):
 @app.route('/catalog.json')
 @app.route('/categories.json')
 def api_categories():
+    """
+    API JSON Format: List all of the categories
+    """
     categories = session.query(Category).all()
     return jsonify(categories=[c.serialize for c in categories])
 
 
 @app.route('/courses.json')
 def api_courses():
+    """
+    API JSON Format: List all of the courses
+    """
     courses = session.query(Course).all()
     return jsonify(courses=[c.serialize for c in courses])
 
