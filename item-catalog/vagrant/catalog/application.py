@@ -2,6 +2,7 @@
     Udacity Nanodegree Catalog
     The course catalog example app written with Flask, and sqlite3
 """
+from functools import wraps
 
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from sqlalchemy import create_engine
@@ -56,12 +57,24 @@ def getUserID(email):
 
 
 def user_allowed_to_browse():
-    return 'username' in login_session
+    return 'email' in login_session
 
 
 def user_allowed_to_edit(m):
     return ('user_id' in login_session and
             m.user_id == login_session['user_id'])
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'email' in login_session:
+            return f(*args, **kwargs)
+        else:
+            flash('You are not allowed to access there', 'danger')
+            return redirect('/login')
+
+    return decorated_function
 
 
 @app.context_processor
@@ -261,14 +274,15 @@ def view_course(course_id):
 
 
 @app.route('/course/new', methods=['GET', 'POST'])
+@login_required
 def new_course():
     """
     Allow logged users to create a course
     """
-    # check user logged in
-    if not user_allowed_to_browse():
-        flash('You need to login!', 'danger')
-        return redirect(url_for('showLogin'))
+    # # check user logged in
+    # if not user_allowed_to_browse():
+    #     flash('You need to login!', 'danger')
+    #     return redirect(url_for('showLogin'))
 
     if request.method == 'POST':
         thumbnail_url = str(request.form['thumbnail_url'])
@@ -309,14 +323,15 @@ def new_course():
 
 
 @app.route('/course/<int:course_id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_course(course_id):
     """
     Allow logged users to edit a course
     """
-    # check user logged in
-    if not user_allowed_to_browse():
-        flash('You need to login!', 'danger')
-        return redirect(url_for('showLogin'))
+    # # check user logged in
+    # if not user_allowed_to_browse():
+    #     flash('You need to login!', 'danger')
+    #     return redirect(url_for('showLogin'))
 
     course = session.query(Course).filter_by(id=course_id).one()
 
@@ -356,14 +371,15 @@ def edit_course(course_id):
 
 
 @app.route('/courses/<int:course_id>/delete', methods=['GET', 'POST'])
+@login_required
 def delete_course(course_id):
     """
     Allow logged users to add a delete
     """
-    # check user logged in
-    if not user_allowed_to_browse():
-        flash('You need to login!', 'danger')
-        return redirect(url_for('showLogin'))
+    # # check user logged in
+    # if not user_allowed_to_browse():
+    #     flash('You need to login!', 'danger')
+    #     return redirect(url_for('showLogin'))
 
     course = session.query(Course).filter_by(id=course_id).one()
 
@@ -399,6 +415,16 @@ def api_categories():
     return jsonify(categories=[c.serialize for c in categories])
 
 
+@app.route('/catalog/<int:category_id>/JSON')
+@app.route('/category/<int:category_id>/JSON')
+def api_view_category(category_id):
+    """
+    API JSON Format: Show details of selected category
+    """
+    category = session.query(Category).filter_by(id=category_id).one()
+    return jsonify(category.serialize)
+
+
 @app.route('/courses.json')
 def api_courses():
     """
@@ -406,6 +432,15 @@ def api_courses():
     """
     courses = session.query(Course).all()
     return jsonify(courses=[c.serialize for c in courses])
+
+
+@app.route('/course/<int:course_id>/JSON')
+def api_view_course(course_id):
+    """
+    API JSON Format: Show details of selected course
+    """
+    course = session.query(Course).filter_by(id=course_id).one()
+    return jsonify(course.serialize)
 
 
 if __name__ == '__main__':
