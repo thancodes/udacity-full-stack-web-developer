@@ -142,12 +142,117 @@ $(document).ready(function () {
             type: 'GET',
             cache: true
         }).done(function (data, textStatus, jqXHR) {
+            // transform data to RandomImage Model
             var mapped = $.map(data, function (item) {
                 return new RandomImage(item);
             })
+
+            // Set values randomImages with mapped array
             self.randomImages(mapped.splice(0, 9));
         }).fail(function (jqXHR, textStatus, errorThrown) {
-            $('#random').hide();
+            // Add mockup data when https://unsplash.it/list server error
+            var raw = [{
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0000_yC-Yzbqy7PY.jpeg",
+                "id": 0,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/yC-Yzbqy7PY"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0001_LNRyGwIJr5c.jpeg",
+                "id": 1,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/LNRyGwIJr5c"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0002_N7XodRrbzS0.jpeg",
+                "id": 2,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/N7XodRrbzS0"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0003_Dl6jeyfihLk.jpeg",
+                "id": 3,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/Dl6jeyfihLk"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0004_y83Je1OC6Wc.jpeg",
+                "id": 4,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/y83Je1OC6Wc"
+            }, {
+                "format": "jpeg",
+                "width": 5245,
+                "height": 3497,
+                "filename": "0005_LF8gK8-HGSg.jpeg",
+                "id": 5,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/LF8gK8-HGSg"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0006_tAKXap853rY.jpeg",
+                "id": 6,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/tAKXap853rY"
+            }, {
+                "format": "jpeg",
+                "width": 4728,
+                "height": 3168,
+                "filename": "0007_BbQLHCpVUqA.jpeg",
+                "id": 7,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/BbQLHCpVUqA"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3744,
+                "filename": "0008_xII7efH1G6o.jpeg",
+                "id": 8,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/xII7efH1G6o"
+            }, {
+                "format": "jpeg",
+                "width": 5616,
+                "height": 3672,
+                "filename": "0009_ABDTiLqDhJA.jpeg",
+                "id": 9,
+                "author": "Alejandro Escamilla",
+                "author_url": "https://unsplash.com/@alejandroescamilla",
+                "post_url": "https://unsplash.com/photos/ABDTiLqDhJA"
+            }]
+
+            // json decode
+            var data = JSON.parse(raw);
+
+            // transform data to RandomImage Model
+            var mapped = $.map(data, function (item) {
+                return new RandomImage(item);
+            })
+
+            // Set values randomImages with mapped array
+            self.randomImages(mapped.splice(0, 9));
         }).always(function () {
             //
         });
