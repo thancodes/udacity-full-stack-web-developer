@@ -88,7 +88,7 @@
                     <input type="text" data-bind="value: search, valueUpdate: 'afterkeydown'" class="form-control" placeholder="Search...">
                 </div>
                 <div class="panel-body">
-                    <ul data-bind="foreach: filteredItems" class="list-group">
+                    <ul data-bind="foreach: filteredDistrictItems" class="list-group">
                         <a href="#" data-bind="click: mapChangeCenter, text: formatted" class="list-group-item"></a>
                     </ul>
                 </div>
@@ -118,7 +118,7 @@
 <script src="bower_components/knockout/dist/knockout.debug.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ"></script>
 <script>
-    function Tambon(data) {
+    function District(data) {
         var self = this;
         self.district = typeof data['district'] !== 'undefined' ? data['district'] : 'N/A';
         self.province = typeof data['province'] !== 'undefined' ? data['province'] : 'N/A';
@@ -130,7 +130,7 @@
         });
     }
 
-    function Image(data) {
+    function RandomImage(data) {
         var self = this;
         self.format = typeof data['format'] !== 'undefined' ? data['format'] : '';
         self.width = typeof data['width'] !== 'undefined' ? data['width'] : '';
@@ -158,10 +158,16 @@
         });
 
         self.mapMarkers = [];
-
         self.infoWindow = new google.maps.InfoWindow({
             height: 320
         });
+
+        self.clearMapMarkers = function () {
+            for (var index = 0; index < this.mapMarkers.length; index++) {
+                this.mapMarkers[index].setMap(null);
+            }
+            this.mapMarkers = [];
+        };
 
         self.drawMarkers = function (districts) {
             self.clearMapMarkers();
@@ -176,19 +182,12 @@
                 mapMarker.addListener('click', self.selectedMapMarker(mapMarker, index, district));
 
                 self.mapMarkers.push(mapMarker);
-                self.mapMarkers[i].setMap(self.map);
+                self.mapMarkers[index].setMap(self.map);
             }
         };
 
         self.mapChangeCenter = function (item) {
             self.map.panTo({lat: item.lat, lng: item.lng});
-        };
-
-        self.clearMapMarkers = function () {
-            for (var i = 0; i < this.markers.length; i++) {
-                this.markers[i].setMap(null);
-            }
-            this.markers = [];
         };
 
         self.filteredDistrictItems = ko.computed(function () {
@@ -209,37 +208,21 @@
         self.selectedMapMarker = function (marker, index, place) {
             return function () {
                 let contentString = '<div class="info-window">' +
-                    '<img class="img-thumbnail" style="max-width: 300px;" src="https://maps.googleapis.com/maps/api/streetview?size=280x140&location=' + place.formattedTambon().replace(' ', '+') + '&heading=151.78&pitch=-0.76&key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ">' +
-                    '<h3>' + place.formattedTambon() + '</h3>' +
+                    '<img class="img-thumbnail" style="max-width: 300px;" src="https://maps.googleapis.com/maps/api/streetview?size=280x140&location=' + place.formatted().replace(' ', '+') + '&heading=151.78&pitch=-0.76&key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ">' +
+                    '<h3>' + place.formatted() + '</h3>' +
                     '</div>';
 
-                var infowindow = self.infowindow;
-                infowindow.setContent(contentString);
-                infowindow.close();
+                var infoWindow = self.infoWindow;
+                infoWindow.setContent(contentString);
+                infoWindow.close();
 
-                infowindow.open(self.map, marker);
+                infoWindow.open(self.map, marker);
             };
-        };
-
-        self.selectMaker = function () {
-            let contentString = '<div>' +
-                '<h3>' + items[i].formattedTambon() + '</h3>' +
-                '<p>District: ' + items[i].district + '</p>' +
-                '<p>Province: ' + items[i].province + '</p>' +
-                '<p>Lat: ' + items[i].lat + '</p>' +
-                '<p>Lng: ' + items[i].lng + '</p>' +
-                '</div>';
-            var infowindow = self.infowindow;
-
-            var html = contentString;
-            infowindow.setContent(html);
-            infowindow.close();
-
         };
 
         $.getJSON('tambons.json', function (data) {
             var mapped = $.map(data, function (item) {
-                return new Tambon(item);
+                return new District(item);
             })
 
             self.districtItems(mapped);
@@ -248,7 +231,7 @@
 
         $.getJSON('https://unsplash.it/list', function (data) {
             var mapped = $.map(data, function (item) {
-                return new Image(item);
+                return new RandomImage(item);
             })
             self.randomImages(mapped.splice(0, 9));
         })
