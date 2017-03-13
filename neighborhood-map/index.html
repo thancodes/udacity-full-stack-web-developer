@@ -89,7 +89,7 @@
                 </div>
                 <div class="panel-body">
                     <ul data-bind="foreach: filteredItems" class="list-group">
-                        <a href="#" data-bind="click: panTo, text: formattedTambon" class="list-group-item"></a>
+                        <a href="#" data-bind="click: mapChangeCenter, text: formatted" class="list-group-item"></a>
                     </ul>
                 </div>
             </div>
@@ -125,12 +125,12 @@
         self.lat = typeof data['lat'] !== 'undefined' ? parseFloat(data['lat']) : 0;
         self.lng = typeof data['long'] !== 'undefined' ? parseFloat(data['long']) : 0;
 
-        self.formattedTambon = ko.computed(function () {
+        self.formatted = ko.computed(function () {
             return self.district + ', ' + self.province;
         });
     }
 
-    function RandomImage(data) {
+    function Image(data) {
         var self = this;
         self.format = typeof data['format'] !== 'undefined' ? data['format'] : '';
         self.width = typeof data['width'] !== 'undefined' ? data['width'] : '';
@@ -146,69 +146,67 @@
     function NeighborhoodMapViewModel() {
         self.search = ko.observable("");
 
-        self.tambons = ko.observableArray([]);
+        self.districtItems = ko.observableArray([]);
 
         self.randomImages = ko.observableArray([]);
 
         self.map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 13.749143, lng: 100.497345},
-            zoom: 15,
+            center: {lat: 12.7074, lng: 101.1474},
+            zoom: 10,
             mapTypeControl: false,
             streetViewControl: false
         });
 
-        self.markers = [];
+        self.mapMarkers = [];
 
-        self.infowindow = new google.maps.InfoWindow({
+        self.infoWindow = new google.maps.InfoWindow({
             height: 320
         });
 
-        self.Marker = function (items) {
-            self.clearMarkers();
+        self.drawMarkers = function (districts) {
+            self.clearMapMarkers();
 
-            for (var i = 0, len = items.length; i < len; i++) {
+            for (var index = 0; index < districts.length; index++) {
+                var district = districts[index];
 
-                let marker = new google.maps.Marker({
-                    position: {lat: items[i].lat, lng: items[i].lng},
+                var mapMarker = new google.maps.Marker({
+                    position: {lat: district.lat, lng: district.lng},
                     map: self.map
                 });
+                mapMarker.addListener('click', self.selectedMapMarker(mapMarker, index, district));
 
-                self.markers.push(marker);
-
-                this.markers[i].setMap(this.map);
-
-                marker.addListener('click', self.selectItem(marker, i, items[i]));
+                self.mapMarkers.push(mapMarker);
+                self.mapMarkers[i].setMap(self.map);
             }
         };
 
-        self.panTo = function (item) {
+        self.mapChangeCenter = function (item) {
             self.map.panTo({lat: item.lat, lng: item.lng});
         };
 
-        self.clearMarkers = function () {
+        self.clearMapMarkers = function () {
             for (var i = 0; i < this.markers.length; i++) {
                 this.markers[i].setMap(null);
             }
             this.markers = [];
         };
 
-        self.filteredItems = ko.computed(function () {
-            var query = self.search();
-            if (!query) {
-                return self.tambons();
-            } else {
-                return ko.utils.arrayFilter(self.tambons(), function (item) {
-                    var formatted = item.district + ', ' + item.province;
-                    return formatted.toLowerCase().indexOf(query) !== -1;
+        self.filteredDistrictItems = ko.computed(function () {
+            var searchQuery = self.search();
+            if (searchQuery !== '') {
+                return ko.utils.arrayFilter(self.districtItems(), function (item) {
+                    return item.formatted().toLowerCase().indexOf(searchQuery) !== -1;
                 });
             }
+
+            return self.districtItems();
         });
 
-        self.filteredItems.subscribe(function () {
-            self.Marker(self.filteredItems());
+        self.filteredDistrictItems.subscribe(function () {
+            self.drawMarkers(self.filteredDistrictItems());
         });
 
-        self.selectItem = function (marker, index, place) {
+        self.selectedMapMarker = function (marker, index, place) {
             return function () {
                 let contentString = '<div class="info-window">' +
                     '<img class="img-thumbnail" style="max-width: 300px;" src="https://maps.googleapis.com/maps/api/streetview?size=280x140&location=' + place.formattedTambon().replace(' ', '+') + '&heading=151.78&pitch=-0.76&key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ">' +
@@ -240,18 +238,19 @@
         };
 
         $.getJSON('tambons.json', function (data) {
-            var mappedTambons = $.map(data, function (item) {
+            var mapped = $.map(data, function (item) {
                 return new Tambon(item);
             })
-            self.tambons(mappedTambons);
-            self.Marker(self.tambons());
+
+            self.districtItems(mapped);
+            self.drawMarkers(self.districtItems());
         });
 
         $.getJSON('https://unsplash.it/list', function (data) {
-            var mappedRandomImages = $.map(data, function (item) {
-                return new RandomImage(item);
+            var mapped = $.map(data, function (item) {
+                return new Image(item);
             })
-            self.randomImages(mappedRandomImages.splice(0, 9));
+            self.randomImages(mapped.splice(0, 9));
         })
     }
 
