@@ -35,7 +35,9 @@ class Makefile
         if (($handle = fopen($this->filename, 'r')) !== false) {
             while (($data = fgetcsv($handle, 1000, ',')) !== false) {
                 try {
-                    $this->items[] = $this->transform($data);
+                    $value = $this->transform($data);
+                    $unique = $value['locality'];
+                    $this->items[$unique] = $value;
                 } catch (InvalidArgumentException $ex) {
                     print '$ex: ' . $ex->getMessage() . PHP_EOL;
                 }
@@ -55,6 +57,10 @@ class Makefile
     protected function transform($data)
     {
         list($locality, $district, $province, $lat, $long) = $data;
+
+        # if ($province !== 'Rayong') {
+        #     throw new InvalidArgumentException(vsprintf('"%s" is skipped.', implode(',', $data)));
+        # }
 
         $transform = compact('locality', 'district', 'province', 'lat', 'long');
         foreach ($transform as $value) {
