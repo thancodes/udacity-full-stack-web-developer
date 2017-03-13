@@ -36,7 +36,7 @@
             overflow-y: scroll;
         }
 
-        .list-group > li {
+        .list-group > .list-group-item {
             width: 99%;
         }
 
@@ -69,13 +69,18 @@
 <div class="container-fluid">
     <div class="row">
         <div id="sidebar" class="col-xs-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>The Districts of Thailand</h1>
+                </div>
+            </div>
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <input type="text" name="" id="" class="form-control" placeholder="Search...">
                 </div>
                 <div class="panel-body">
                     <ul data-bind="foreach: tambons" class="list-group">
-                        <li data-bind="text: formattedTambon" class="list-group-item"></li>
+                        <a data-bind="text: formattedTambon" class="list-group-item"></a>
                     </ul>
                 </div>
             </div>
@@ -94,14 +99,13 @@
 <script>
     function Tambon(data) {
         var self = this;
-        self.locality = typeof data['locality'] !== 'undefined' ? data['locality'] : 'N/A';
         self.district = typeof data['district'] !== 'undefined' ? data['district'] : 'N/A';
         self.province = typeof data['province'] !== 'undefined' ? data['province'] : 'N/A';
         self.lat = typeof data['lat'] !== 'undefined' ? parseFloat(data['lat']) : 0;
         self.lng = typeof data['long'] !== 'undefined' ? parseFloat(data['long']) : 0;
 
         self.formattedTambon = ko.computed(function () {
-            return self.locality + ', ' + self.district + ', ' + self.province;
+            return self.district + ', ' + self.province;
         });
     }
 
