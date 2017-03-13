@@ -151,7 +151,7 @@ $(document).ready(function () {
             self.randomImages(mapped.splice(0, 9));
         }).fail(function (jqXHR, textStatus, errorThrown) {
             // Add mockup data when https://unsplash.it/list server error
-            var raw = [{
+            var data = [{
                 "format": "jpeg",
                 "width": 5616,
                 "height": 3744,
@@ -241,10 +241,7 @@ $(document).ready(function () {
                 "author": "Alejandro Escamilla",
                 "author_url": "https://unsplash.com/@alejandroescamilla",
                 "post_url": "https://unsplash.com/photos/ABDTiLqDhJA"
-            }]
-
-            // json decode
-            var data = JSON.parse(raw);
+            }];
 
             // transform data to RandomImage Model
             var mapped = $.map(data, function (item) {
