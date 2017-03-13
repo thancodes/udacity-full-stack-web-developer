@@ -1,0 +1,64 @@
+h1 {
+    font-size: 24px;
+}
+
+#map {
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+}
+
+#sidebar {
+    margin-top: 0px;
+}
+
+#district .panel-body {
+    padding-bottom: 0px;
+}
+
+#district .panel-body .list-group {
+    height: 164px;
+    overflow-y: scroll;
+}
+
+#random .panel-body {
+    padding-bottom: 0px;
+}
+
+#random .panel-body {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+@media only screen and (min-width: 500px) {
+    #random .panel-body {
+        height: 146px;
+        max-height: 146px;
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    #district .panel-body .list-group {
+        height: 56vh;
+        overflow-y: scroll;
+    }
+
+    #random .panel-body {
+        height: inherit;
+        max-height: inherit;
+        overflow-y: scroll;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    #district .panel-body .list-group {
+        height: 40vh;
+        overflow-y: scroll;
+    }
+
+    .list-group > .list-group-item {
+        width: 99%;
+    }
+}
