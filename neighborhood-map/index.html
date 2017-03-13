@@ -32,7 +32,7 @@
         }
 
         .list-group {
-            max-height: 300px;
+            max-height: 150px;
             overflow-y: scroll;
         }
 
@@ -40,7 +40,6 @@
             width: 99%;
         }
 
-        /* Let's get this party started */
         ::-webkit-scrollbar {
             width: 12px;
         }
@@ -141,7 +140,7 @@
 
                 this.markers[i].setMap(this.map);
 
-                marker.addListener('click', self.selectItem(marker, i));
+                marker.addListener('click', self.selectItem(marker, i, items[i]));
             }
         };
 
@@ -172,14 +171,15 @@
             self.Marker(self.filteredItems());
         });
 
-        self.selectItem = function (marker, index) {
+        self.selectItem = function (marker, index, place) {
             return function () {
                 let contentString = '<div>' +
-                    '<h3>' + self.tambons()[index].formattedTambon() + '</h3>' +
-                    '<p>District: ' + self.tambons()[index].district + '</p>' +
-                    '<p>Province: ' + self.tambons()[index].province + '</p>' +
-                    '<p>Lat: ' + self.tambons()[index].lat + '</p>' +
-                    '<p>Lng: ' + self.tambons()[index].lng + '</p>' +
+                    '<img class="img-thumbnail" style="max-width: 300px;" src="https://maps.googleapis.com/maps/api/streetview?size=280x140&location=' + place.formattedTambon().replace(' ', '+') + '&heading=151.78&pitch=-0.76&key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ">' +
+                    '<h3>' + place.formattedTambon() + '</h3>' +
+                    '<p>District: ' + place.district + '</p>' +
+                    '<p>Province: ' + place.province + '</p>' +
+                    '<p>Latitude: ' + place.lat + '</p>' +
+                    '<p>Longitude: ' + place.lng + '</p>' +
                     '</div>';
 
                 var infowindow = self.infowindow;
