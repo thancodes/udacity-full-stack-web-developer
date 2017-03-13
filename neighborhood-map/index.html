@@ -68,7 +68,7 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div id="sidebar" class="col-xs-3">
+        <div id="sidebar" class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
                     <h1>The Districts of Thailand</h1>
@@ -76,16 +76,16 @@
             </div>
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <input type="text" name="" id="" class="form-control" placeholder="Search...">
+                    <input type="text" data-bind="value: search, valueUpdate: 'afterkeydown'" class="form-control" placeholder="Search...">
                 </div>
                 <div class="panel-body">
-                    <ul data-bind="foreach: tambons" class="list-group">
-                        <a data-bind="text: formattedTambon" class="list-group-item"></a>
+                    <ul data-bind="foreach: filteredItems" class="list-group">
+                        <a href="#" data-bind="click: panTo, text: formattedTambon" class="list-group-item"></a>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="col-xs-9">
+        <div class="col-md-9">
             <div class="iframe-container">
                 <div id="map"></div>
             </div>
@@ -110,6 +110,8 @@
     }
 
     function NeighborhoodMapViewModel() {
+        self.search = ko.observable("");
+
         self.tambons = ko.observableArray([]);
 
         self.map = new google.maps.Map(document.getElementById('map'), {
@@ -122,42 +124,95 @@
         self.markers = [];
 
         self.infowindow = new google.maps.InfoWindow({
-            maxWidth: 320
+            height: 320
         });
 
-        self.Marker = ko.computed(function () {
-            var items = self.tambons()
+        self.Marker = function (items) {
+            self.clearMarkers();
+
             for (var i = 0, len = items.length; i < len; i++) {
-                var location = {lat: items[i].lat, lng: items[i].lng};
-                var marker = new google.maps.Marker({
-                    position: location,
+
+                let marker = new google.maps.Marker({
+                    position: {lat: items[i].lat, lng: items[i].lng},
                     map: self.map
                 });
 
-                var contentString = `
-<p><iframe width="560" height="315" src="https://www.youtube.com/embed?listType=search&amp;list=Rayong" frameborder="0" allowfullscreen></iframe></p>
-`;
-
-                let infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                });
-
-                marker.addListener('click', function () {
-                    infowindow.open(self.map, marker);
-                });
-
                 self.markers.push(marker);
+
+                this.markers[i].setMap(this.map);
+
+                marker.addListener('click', self.selectItem(marker, i));
+            }
+        };
+
+        self.panTo = function (item) {
+            self.map.panTo({lat: item.lat, lng: item.lng});
+        };
+
+        self.clearMarkers = function () {
+            for (var i = 0; i < this.markers.length; i++) {
+                this.markers[i].setMap(null);
+            }
+            this.markers = [];
+        };
+
+        self.filteredItems = ko.computed(function () {
+            var query = self.search();
+            if (!query) {
+                return self.tambons();
+            } else {
+                return ko.utils.arrayFilter(self.tambons(), function (item) {
+                    var formatted = item.district + ', ' + item.province;
+                    return formatted.toLowerCase().indexOf(query) !== -1;
+                });
             }
         });
+
+        self.filteredItems.subscribe(function () {
+            self.Marker(self.filteredItems());
+        });
+
+        self.selectItem = function (marker, index) {
+            return function () {
+                let contentString = '<div>' +
+                    '<h3>' + self.tambons()[index].formattedTambon() + '</h3>' +
+                    '<p>District: ' + self.tambons()[index].district + '</p>' +
+                    '<p>Province: ' + self.tambons()[index].province + '</p>' +
+                    '<p>Lat: ' + self.tambons()[index].lat + '</p>' +
+                    '<p>Lng: ' + self.tambons()[index].lng + '</p>' +
+                    '</div>';
+
+                var infowindow = self.infowindow;
+                infowindow.setContent(contentString);
+                infowindow.close();
+
+                infowindow.open(self.map, marker);
+            };
+        };
+
+        self.selectMaker = function () {
+            let contentString = '<div>' +
+                '<h3>' + items[i].formattedTambon() + '</h3>' +
+                '<p>District: ' + items[i].district + '</p>' +
+                '<p>Province: ' + items[i].province + '</p>' +
+                '<p>Lat: ' + items[i].lat + '</p>' +
+                '<p>Lng: ' + items[i].lng + '</p>' +
+                '</div>';
+            var infowindow = self.infowindow;
+
+            var html = contentString;
+            infowindow.setContent(html);
+            infowindow.close();
+
+        };
 
         $.getJSON('tambons.json', function (data) {
             var mappedTambons = $.map(data, function (item) {
                 return new Tambon(item);
             })
             self.tambons(mappedTambons);
-            self.Marker();
+            self.Marker(self.tambons());
         });
-
     }
 
     ko.applyBindings(new NeighborhoodMapViewModel());
