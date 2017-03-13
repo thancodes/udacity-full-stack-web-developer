@@ -84,6 +84,7 @@ $ sudo ufw enable
 ```
 
 ### Install Apache to serve a Python mod_wsgi application
+Reference: `https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps`
 
 Install Apache:
 ```bash
@@ -96,8 +97,11 @@ $ sudo apt-get install libapache2-mod-wsgi
 ```
 
 ### Install and configure PostgreSQL
-`https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04`
-`https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps`
+Reference: 
+```
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
+https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps
+```
 
 Install PostgreSQL:
 ```bash
@@ -150,7 +154,7 @@ GRANT ALL ON SCHEMA public TO catalog;
 \q
 ```
 
-# Install Git
+### Install Git
 
 Install Git:
 ```bash
