@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     <style>
+        h1 {
+            font-size: 24px;
+        }
+
         #map {
             width: 100%;
             height: 100vh;
@@ -16,52 +20,70 @@
         }
 
         #sidebar {
-            margin-top: 30px;
+            margin-top: 0px;
         }
 
-        .list-group {
-            max-height: 150px;
+        #district .panel-body {
+            padding-bottom: 0px;
+        }
+
+        #district .panel-body .list-group {
+            height: 164px;
             overflow-y: scroll;
         }
 
-        .list-group > .list-group-item {
-            width: 99%;
+        #random .panel-body {
+            padding-bottom: 0px;
         }
 
-        ::-webkit-scrollbar {
-            width: 12px;
+        #random .panel-body {
+            height: 100px;
+            overflow-y: scroll;
         }
 
-        /* Track */
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-            -webkit-border-radius: 10px;
-            border-radius: 10px;
+        @media only screen and (min-width: 500px) {
+            #random .panel-body {
+                height: 146px;
+                max-height: 146px;
+                overflow-y: scroll;
+            }
         }
 
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            -webkit-border-radius: 10px;
-            border-radius: 10px;
-            background: rgba(255, 0, 0, 0.8);
-            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+        @media only screen and (min-width: 768px) {
+            #district .panel-body .list-group {
+                height: 56vh;
+                overflow-y: scroll;
+            }
+
+            #random .panel-body {
+                height: inherit;
+                max-height: inherit;
+                overflow-y: scroll;
+            }
         }
 
-        ::-webkit-scrollbar-thumb:window-inactive {
-            background: rgba(255, 0, 0, 0.4);
+        @media only screen and (min-width: 992px) {
+            #district .panel-body .list-group {
+                height: 40vh;
+                overflow-y: scroll;
+            }
+
+            .list-group > .list-group-item {
+                width: 99%;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div id="sidebar" class="col-md-3">
+        <div id="sidebar" class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
             <div class="row">
                 <div class="col-md-12">
                     <h1>The Districts of Thailand</h1>
                 </div>
             </div>
-            <div class="panel panel-primary">
+            <div id="district" class="panel panel-primary">
                 <div class="panel-heading">
                     <input type="text" data-bind="value: search, valueUpdate: 'afterkeydown'" class="form-control" placeholder="Search...">
                 </div>
@@ -71,12 +93,12 @@
                     </ul>
                 </div>
             </div>
-            <div class="panel panel-primary">
+            <div id="random" class="panel panel-primary">
                 <div class="panel-heading">Random images</div>
                 <div class="panel-body">
                     <div data-bind="foreach: randomImages" class="row">
-                        <div class="col-md-4">
-                            <a href="#" data-bind="" class="thumbnail">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <a target="_blank" href="#" data-bind="attr: { href: image_url }" class="thumbnail">
                                 <img data-bind="attr: { src: image_url }" class="img-responsive">
                             </a>
                         </div>
@@ -84,8 +106,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
-            <div id="map"></div>
+        <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+            <div class="row">
+                <div id="map"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -186,13 +210,9 @@
 
         self.selectItem = function (marker, index, place) {
             return function () {
-                let contentString = '<div>' +
+                let contentString = '<div class="info-window">' +
                     '<img class="img-thumbnail" style="max-width: 300px;" src="https://maps.googleapis.com/maps/api/streetview?size=280x140&location=' + place.formattedTambon().replace(' ', '+') + '&heading=151.78&pitch=-0.76&key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ">' +
                     '<h3>' + place.formattedTambon() + '</h3>' +
-                    '<p>District: ' + place.district + '</p>' +
-                    '<p>Province: ' + place.province + '</p>' +
-                    '<p>Latitude: ' + place.lat + '</p>' +
-                    '<p>Longitude: ' + place.lng + '</p>' +
                     '</div>';
 
                 var infowindow = self.infowindow;
