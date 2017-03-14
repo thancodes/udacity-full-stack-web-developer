@@ -31,6 +31,10 @@ h1 {
     overflow-y: scroll;
 }
 
+.info-window h3 {
+    margin-top: 0px;
+}
+
 @media only screen and (min-width: 500px) {
     #random .panel-body {
         height: 146px;

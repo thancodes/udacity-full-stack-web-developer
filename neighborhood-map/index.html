@@ -24,7 +24,9 @@
                 </div>
                 <div class="panel-body">
                     <ul data-bind="foreach: filteredDistrictItems" class="list-group">
-                        <a href="#" data-bind="click: mapChangeCenter, text: formatted" class="list-group-item"></a>
+                        <li class="list-group-item">
+                            <a href="#" data-bind="click: mapChangeCenter, text: formatted"></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -51,7 +53,7 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/knockout/dist/knockout.debug.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ"></script>
 <script src="js/app.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ&callback=initMap"></script>
 </body>
 </html>
