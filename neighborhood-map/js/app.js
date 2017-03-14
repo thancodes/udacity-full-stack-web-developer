@@ -30,6 +30,11 @@ function RandomImage(data) {
 
 // Initialize ViewModel
 function NeighborhoodMapViewModel(googleMap) {
+    // Set weather values is ""
+    self.weatherSummary = ko.observable('');
+    self.weatherHumidity = ko.observable('');
+    self.weatherWind = ko.observable('');
+
     // Set value is "" for search input
     self.search = ko.observable("");
 
@@ -131,11 +136,11 @@ function NeighborhoodMapViewModel(googleMap) {
     // Select map marker and close old infoWindow and show new infoWindow
     self.selectedMapMarker = function (mapMarker, place) {
         return function () {
-            var contentString = '<div class="info-window">' +
+            var contentString = '<div id="info-content" class="info-window">' +
                 '<h3>' + place.formatted() + '</h3>' +
-                '<strong id="summary_value"></strong>' +
-                '<br><strong>Humidity:</strong> <span id="humidity_value"></span>' +
-                '<br><strong>Wind:</strong> <span id="wind_value"></span>' +
+                '<strong data-bind="text: weatherSummary"></strong>' +
+                '<br><strong>Humidity:</strong> <span data-bind="text: weatherHumidity"></span>' +
+                '<br><strong>Wind:</strong> <span data-bind="text: weatherWind"></span>' +
                 '</div>';
 
             // Set content infoWindow
@@ -153,6 +158,9 @@ function NeighborhoodMapViewModel(googleMap) {
 
             // Update weather content in infowindow
             updateWeather(place.lat, place.lng);
+
+            // Re-bindings infowindow
+            ko.applyBindings(this, document.getElementById('info-content'));
         };
     };
 
@@ -163,20 +171,26 @@ function NeighborhoodMapViewModel(googleMap) {
             type: 'GET',
             beforeSend: function (xhr) {
                 // Set loading
-                $('#summary_value').text('Loading...');
-                $('#humidity_value').text('Loading...');
-                $('#wind_value').text('Loading...');
+                self.weatherSummary('Loading...');
+                self.weatherHumidity('Loading...');
+                self.weatherWind('Loading...');
             }
         }).done(function (data, textStatus, jqXHR) {
+            var firstWeather = data.weather[0];
+            var summaryDescription = firstWeather.main + ', ' + firstWeather.description;
+
+            var humidityPercentage = data.main.humidity + '%';
+            var windSpeedPerKmh = data.wind.speed + ' km/h';
+
             // Set weather content with response data
-            $('#summary_value').text(data.weather[0].main + ', ' + data.weather[0].description);
-            $('#humidity_value').text(data.main.humidity + '%');
-            $('#wind_value').text(data.wind.speed + ' km/h');
+            self.weatherSummary(summaryDescription);
+            self.weatherHumidity(humidityPercentage);
+            self.weatherWind(windSpeedPerKmh);
         }).fail(function (jqXHR, textStatus, errorThrown) {
-            // Set weather content to n/a
-            $('#summary_value').text('N/A');
-            $('#humidity_value').text('N/A');
-            $('#wind_value').text('N/A');
+            // Set weather content to N/A
+            self.weatherSummary('N/A');
+            self.weatherHumidity('N/A');
+            self.weatherWind('N/A');
         }).always(function () {
             //
         })
@@ -201,12 +215,12 @@ function NeighborhoodMapViewModel(googleMap) {
         // transform data to RandomImage Model
         var mapped = $.map(data, function (item) {
             return new RandomImage(item);
-        })
+        });
 
         // Set values randomImages with mapped array
         self.randomImages(mapped.splice(0, 9));
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        $('#random > .panel-body').html('<div class="alert alert-danger">Fail to get `unsplash.it` resources</div>');
+        //
     }).always(function () {
         //
     });
@@ -222,4 +236,9 @@ function initMap() {
     });
 
     ko.applyBindings(new NeighborhoodMapViewModel(googleMap));
+}
+
+// When initialize google map error
+function mapError() {
+    document.getElementById('map').innerHTML = '<div class="alert alert-danger">Failed to load map.</div>';
 }

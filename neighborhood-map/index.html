@@ -10,50 +10,62 @@
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div id="sidebar" class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>The Districts of Thailand</h1>
-                </div>
-            </div>
-            <div id="district" class="panel panel-primary">
-                <div class="panel-heading">
-                    <input type="text" data-bind="value: search, valueUpdate: 'afterkeydown'" class="form-control" placeholder="Search...">
-                </div>
-                <div class="panel-body">
-                    <ul data-bind="foreach: filteredDistrictItems" class="list-group">
-                        <li class="list-group-item">
-                            <a href="#" data-bind="click: mapChangeCenter, text: formatted"></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div id="random" class="panel panel-primary">
-                <div class="panel-heading">Random images</div>
-                <div class="panel-body">
-                    <div data-bind="foreach: randomImages" class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-4">
-                            <a target="_blank" href="#" data-bind="attr: { href: image_url }" class="thumbnail">
-                                <img data-bind="attr: { src: image_url, alt: author, title: author }" class="img-responsive" src="http://placehold.it/350x150" alt="">
-                            </a>
+<section id="neighborhood-map">
+    <div class="container-fluid">
+        <div class="row">
+            <aside>
+                <div id="sidebar" class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1>The Districts of Thailand</h1>
+                        </div>
+                    </div>
+                    <div id="district" class="panel panel-primary">
+                        <div class="panel-heading">
+                            <input type="text" data-bind="value: search, valueUpdate: 'afterkeydown'" class="form-control" placeholder="Search...">
+                        </div>
+                        <div class="panel-body">
+                            <ul data-bind="foreach: filteredDistrictItems" class="list-group">
+                                <li class="list-group-item">
+                                    <a href="#" data-bind="click: mapChangeCenter, text: formatted"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="random" class="panel panel-primary">
+                        <div class="panel-heading">Random images</div>
+                        <div class="panel-body">
+                            <div data-bind="if: randomImages().length == 0">
+                                <div class="alert alert-danger">
+                                    There aren't any images or fail to get `unsplash.it` resources.
+                                </div>
+                            </div>
+                            <div data-bind="foreach: randomImages" class="row">
+                                <div class="col-md-4 col-sm-4 col-xs-4">
+                                    <a target="_blank" href="#" data-bind="attr: { href: image_url }" class="thumbnail">
+                                        <img data-bind="attr: { src: image_url, alt: filename, title: filename }" class="img-responsive" src="http://placehold.it/350x150" alt="">
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
-            <div class="row">
-                <div id="map"></div>
-            </div>
+            </aside>
+            <main>
+                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+                    <div class="row">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
-</div>
+</section>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/knockout/dist/knockout.debug.js"></script>
 <script src="js/app.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ&callback=initMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap&key=AIzaSyDzW4E77XCeNaBRJ3xzee1LHISl0nd-efQ"
+        async defer onerror="mapError()"></script>
 </body>
 </html>
