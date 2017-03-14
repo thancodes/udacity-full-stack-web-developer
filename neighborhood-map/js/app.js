@@ -71,6 +71,7 @@ function NeighborhoodMapViewModel(googleMap) {
         for (var index = 0; index < districts.length; index++) {
             var district = districts[index];
 
+            // Map icons array
             var mapIcons = [
                 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
@@ -138,33 +139,42 @@ function NeighborhoodMapViewModel(googleMap) {
                 '<br><strong>Wind:</strong> <span id="wind_value"></span>' +
                 '</div>';
 
+            // Set content infoWindow
             var infoWindow = self.infoWindow;
             infoWindow.setContent(contentString);
             infoWindow.close();
 
             infoWindow.open(self.map, mapMarker);
 
+            // Clear map marker animation in the map
             self.clearMapAnimation();
+
+            // Set animation for selected map marker
             mapMarker.setAnimation(google.maps.Animation.BOUNCE);
 
+            // Update weather content in infowindow
             updateWeather(place.lat, place.lng);
         };
     };
 
+    // Update weather content in infowindow
     self.updateWeather = function (lat, lng) {
         $.ajax({
             url: 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lng + '&appid=3730de81374be7ce04f1a8b488159d68',
             type: 'GET',
             beforeSend: function (xhr) {
+                // Set loading
                 $('#summary_value').text('Loading...');
                 $('#humidity_value').text('Loading...');
                 $('#wind_value').text('Loading...');
             }
         }).done(function (data, textStatus, jqXHR) {
+            // Set weather content with response data
             $('#summary_value').text(data.weather[0].main + ', ' + data.weather[0].description);
             $('#humidity_value').text(data.main.humidity + '%');
             $('#wind_value').text(data.wind.speed + ' km/h');
         }).fail(function (jqXHR, textStatus, errorThrown) {
+            // Set weather content to n/a
             $('#summary_value').text('N/A');
             $('#humidity_value').text('N/A');
             $('#wind_value').text('N/A');
@@ -173,7 +183,6 @@ function NeighborhoodMapViewModel(googleMap) {
         })
     };
 
-    '';
     // Get json tambons.json and assign data to districtItems
     $.getJSON('tambons.json', function (data) {
         var mapped = $.map(data, function (item) {
