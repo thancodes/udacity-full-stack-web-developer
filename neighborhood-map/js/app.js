@@ -128,7 +128,6 @@ function NeighborhoodMapViewModel(googleMap) {
         self.drawMarkers(self.filteredDistrictItems());
     });
 
-    '3730de81374be7ce04f1a8b488159d68';
     // Select map marker and close old infoWindow and show new infoWindow
     self.selectedMapMarker = function (mapMarker, place) {
         return function () {
