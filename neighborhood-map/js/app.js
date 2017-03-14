@@ -30,13 +30,13 @@ function RandomImage(data) {
 
 // Initialize ViewModel
 function NeighborhoodMapViewModel(googleMap) {
-    // Set weather values is ""
+    // Set weather values is ''
     self.weatherSummary = ko.observable('');
     self.weatherHumidity = ko.observable('');
     self.weatherWind = ko.observable('');
 
-    // Set value is "" for search input
-    self.search = ko.observable("");
+    // Set value is '' for search input
+    self.search = ko.observable('');
 
     // Set district list observable array from tambons.json with ajax
     self.districtItems = ko.observableArray([]);
@@ -44,7 +44,7 @@ function NeighborhoodMapViewModel(googleMap) {
     // Set random images list observable array
     self.randomImages = ko.observableArray([]);
 
-    // Initialize Google Map and set focused map to "Rayong"
+    // Assign Google Map
     self.map = googleMap;
 
     // Initialize map markers
@@ -100,7 +100,7 @@ function NeighborhoodMapViewModel(googleMap) {
     // Clear state map markers animate in the map
     self.clearMapAnimation = function () {
         for (var i = 0; i < self.mapMarkers.length; i++) {
-            if (typeof mapMarkers[i].animation !== "undefined") {
+            if (typeof mapMarkers[i].animation !== 'undefined') {
                 self.mapMarkers[i].setAnimation(google.maps.Animation.NONE);
             }
         }
